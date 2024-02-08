@@ -1,5 +1,4 @@
 import React from "react";
-import "whatwg-fetch";
 import {
   fireEvent,
   render,
@@ -27,13 +26,13 @@ test("displays question prompts after fetching", async () => {
 test("creates a new question when the form is submitted", async () => {
   render(<App />);
 
-  // wait for first render of list (otherwise we get a React state warning)
+  // wait for the first render of the list
   await screen.findByText(/lorem testum 1/g);
 
-  // click form page
+  // click the form page
   fireEvent.click(screen.queryByText("New Question"));
 
-  // fill out form
+  // fill out the form
   fireEvent.change(screen.queryByLabelText(/Prompt/), {
     target: { value: "Test Prompt" },
   });
@@ -47,13 +46,14 @@ test("creates a new question when the form is submitted", async () => {
     target: { value: "1" },
   });
 
-  // submit form
+  // submit the form
   fireEvent.submit(screen.queryByText(/Add Question/));
 
   // view questions
   fireEvent.click(screen.queryByText(/View Questions/));
 
-  expect(await screen.findByText(/Test Prompt/g)).toBeInTheDocument();
+  // use a more specific query based on the label text
+  expect(await screen.findByLabelText(/Prompt:/)).toHaveValue("Test Prompt");
   expect(await screen.findByText(/lorem testum 1/g)).toBeInTheDocument();
 });
 
